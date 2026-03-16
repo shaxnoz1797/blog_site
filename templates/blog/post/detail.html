@@ -2,6 +2,9 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+<div class="navigation" style="display: flex; gap: 10px; align-items: center;">
+    <a href="{% url 'blogapp:post_list' %}">⬅ Back</a>
+</div>
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
