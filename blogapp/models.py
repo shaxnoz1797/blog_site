@@ -4,9 +4,10 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-class PublishedManager(models.Manager):
+class PublisherManager(models.Manager):
+
     def get_queryset(self):
-        return super(PublishedManager, self).get_queryset().filter(status='published')
+        return super(PublisherManager, self).get_queryset().filter(status='published')
 
 
 class Post(models.Model):
@@ -19,9 +20,9 @@ class Post(models.Model):
     slug = models.SlugField(max_length=255, unique_for_date="publish")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blog_posts")
     body = models.TextField()
-    publish = models.DateTimeField(default=timezone.now)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    publish = models.DateTimeField(default=timezone.now)  # chop etgan voxti
+    created = models.DateTimeField(auto_now_add=True)  # yaratgan voxti hali chop etilmagan
+    updated = models.DateTimeField(auto_now=True)  #  edit qilgan voxtini oladi.
     status = models.CharField(max_length=10,choices=STATUS_CHOICES, default='draft')
 
     class Meta:
@@ -31,16 +32,18 @@ class Post(models.Model):
         return self.title
 
     objects = models.Manager()
-    published = PublishedManager()
+    published = PublisherManager()
+
 
     def get_absolute_url(self):
         return reverse("blog:post_detail", args=[self.publish.year,
-                                                 self.publish.month,
-                                                 self.publish.day,
-                                                 self.slug])
+                                                    self.publish.month,
+                                                    self.publish.day,
+                                                    self.publish.slug])
 
 
-posts = Post.objects.filter(status='published')
+
+posts = Post.objects.all()
 p_posts = Post.published.all()
 
 
